@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Game" ADD COLUMN     "averageRating" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "reviewCount" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Review" ALTER COLUMN "platform" DROP NOT NULL,
+ALTER COLUMN "gameStatus" DROP NOT NULL;

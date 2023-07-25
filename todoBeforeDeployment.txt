@@ -1,0 +1,10 @@
+get real database - 
+go to pushImage - 
+limit username -
+add captcha - 
+add profileBackgrounds -
+add pfpBorders -
+make sure all api calls are efficient -
+cache db data-
+lists -
+ADD LOADING SCREENS - 

@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String              @id @default(cuid())
+  name           String?
+  password       String?
+  email          String?             @unique
+  emailVerified  DateTime?
+  image          String?
+  imageVersion   Int                 @default(0)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  username       String?             @unique
+  accounts       Account[]
+  sessions       Session[]
+  role           Role                @default(USER)
+  reviews        Review[]
+  profile        Profile?
+  followedBy     Follows[]           @relation("follower")
+  following      Follows[]           @relation("following")
+  profileComment ProfileComment[]
+  opinions       UserReviewOpinion[]
+  reviewComment  ReviewComment[]
+  replys         Replys[]
+  ReplyOpinion   ReplyOpinion[]
+  CommentOpinion CommentOpinion[]
+}
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  providerType       String
+  providerId         String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  expires      DateTime
+  sessionToken String   @unique
+  accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model VerificationRequest {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
+}
+
+model Review {
+  id            Int                 @id @default(autoincrement())
+  createdAt     DateTime            @default(now())
+  title         String?             @default("") @db.VarChar(255)
+  content       String?
+  platform      String?
+  game          Game                @relation(fields: [gameId], references: [gameId])
+  gameId        Int
+  gameStatus    String?
+  Stars         Float
+  author        User                @relation(fields: [authorId], references: [id])
+  authorId      String
+  opinions      UserReviewOpinion[]
+  likesCount    Int                 @default(0)
+  dislikesCount Int                 @default(0)
+  tags          String[]
+  tldr          String[]
+  comments      ReviewComment[]
+
+  @@unique([gameId, authorId])
+}
+
+model ReviewComment {
+  id            Int              @id @default(autoincrement())
+  createdAt     DateTime         @default(now())
+  isRatio       Boolean          @default(false)
+  author        User             @relation(fields: [authorId], references: [id])
+  authorId      String
+  review        Review           @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId      Int
+  content       String
+  opinions      CommentOpinion[]
+  totalLikes    Int              @default(0)
+  totalDislikes Int              @default(0)
+  replys        Replys[]
+
+  @@unique([reviewId, authorId, id])
+}
+
+model Replys {
+  id              Int            @id @default(autoincrement())
+  createdAt       DateTime       @default(now())
+  author          User           @relation(fields: [authorId], references: [id])
+  authorId        String
+  comment         ReviewComment  @relation(fields: [reviewCommentId], references: [id], onDelete: Cascade)
+  reviewCommentId Int
+  content         String
+  totalLikes      Int            @default(0)
+  totalDislikes   Int            @default(0)
+  ReplyOpinion    ReplyOpinion[]
+
+  @@unique([reviewCommentId, authorId, id])
+}
+
+model ReplyOpinion {
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String
+  reply   Replys  @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  replyId Int
+  opinion Opinion @default(NONE)
+
+  @@id([userId, replyId])
+}
+
+model CommentOpinion {
+  user            User          @relation(fields: [userId], references: [id])
+  userId          String
+  reviewComment   ReviewComment @relation(fields: [reviewCommentId], references: [id], onDelete: Cascade)
+  reviewCommentId Int
+  opinion         Opinion       @default(NONE)
+
+  @@id([userId, reviewCommentId])
+}
+
+model UserReviewOpinion {
+  user     User    @relation(fields: [userId], references: [id])
+  userId   String
+  review   Review  @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  reviewId Int
+  opinion  Opinion @default(NONE)
+
+  @@id([userId, reviewId])
+}
+
+model Profile {
+  id              Int              @id @default(autoincrement())
+  bio             String?
+  location        String?
+  user            User             @relation(fields: [userId], references: [id])
+  userId          String           @unique
+  favGames        String[]
+  reviewSpread    Int[]            @default([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+  reviewCount     Int              @default(0)
+  profileComments ProfileComment[]
+  playList        Int[]
+}
+
+model ProfileComment {
+  id        Int     @id @default(autoincrement())
+  profile   Profile @relation(fields: [profileId], references: [id])
+  profileId Int
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  String
+}
+
+model Game {
+  id            Int      @id @default(autoincrement())
+  gameId        Int      @unique
+  stars         Float
+  reviewCount   Int      @default(0)
+  averageRating Float    @default(0)
+  reviewSpread  Int[]    @default([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+  reviews       Review[]
+}
+
+model Follows {
+  follower    User   @relation("follower", fields: [followerId], references: [id])
+  followerId  String
+  following   User   @relation("following", fields: [followingId], references: [id])
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Opinion {
+  LIKE
+  DISLIKE
+  NONE
+}
