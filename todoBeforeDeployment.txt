@@ -8,3 +8,4 @@ make sure all api calls are efficient -
 cache db data-
 lists -
 ADD LOADING SCREENS - 
+convert border to s3 -

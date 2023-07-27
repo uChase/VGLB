@@ -27,7 +27,7 @@ function GameBar({ barHeights, spread, avg, slug, isProfile = false }) {
       return <div className="text-lg font-semibold text-yellow-700">Eh</div>;
     if (avg > 1.5)
       return <div className="text-lg font-semibold text-red-400">Bad</div>;
-    if (avg == 0) {
+    if (avg == 0 || avg == -1) {
       return <div className="text-lg font-semibold ">Not Yet Rated</div>;
     }
     return <div className="text-lg font-semibold text-red-800">Terrible</div>;
@@ -63,6 +63,13 @@ function GameBar({ barHeights, spread, avg, slug, isProfile = false }) {
               if (!isProfile) {
                 router.push(
                   `/games/${slug}/review/all?sort=Popular&rating=${(
+                    (index + 1) *
+                    0.5
+                  ).toFixed(1)}`
+                );
+              } else {
+                router.push(
+                  `/u/${slug}/games?sort=Recent&rating=${(
                     (index + 1) *
                     0.5
                   ).toFixed(1)}`

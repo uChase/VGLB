@@ -8,7 +8,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/navigation";
 
-export default function SortButtons({ slug, sort, rate }) {
+export default function SortingButtons({ slug, sort, rate }) {
   const [anchorElRating, setAnchorElRating] = React.useState(null);
   const [anchorElSortBy, setAnchorElSortBy] = React.useState(null);
   const [selectedRating, setSelectedRating] = React.useState(rate);
@@ -33,32 +33,21 @@ export default function SortButtons({ slug, sort, rate }) {
 
   const handleRatingChange = (newValue) => {
     setSelectedRating(newValue);
-    router.push(
-      `/games/${slug}/review/all?rating=${newValue}&sort=${selectedSortBy}`
-    );
+    router.push(`/u/${slug}/games?rating=${newValue}&sort=${selectedSortBy}`);
     handleRatingClose();
   };
 
   const handleSortByChange = (option) => {
     setSelectedSortBy(option);
-    router.push(
-      `/games/${slug}/review/all?rating=${selectedRating}&sort=${option}`
-    );
+    router.push(`/u/${slug}/games?rating=${selectedRating}&sort=${option}`);
     handleSortByClose();
   };
 
   return (
     <div
       style={{ display: "flex", gap: "1em", justifyContent: "space-evenly" }}
-      className=" border-b border-t border-slate-300 py-1"
+      className="  border-slate-300 "
     >
-      <Typography
-        variant="h6"
-        component="div"
-        style={{ display: "inline-block", marginRight: "10px", color: "white" }}
-      >
-        Sort By:
-      </Typography>{" "}
       <div>
         <Button
           endIcon={<ExpandMoreIcon />}
@@ -115,18 +104,26 @@ export default function SortButtons({ slug, sort, rate }) {
           onClose={handleSortByClose}
           PaperProps={{
             style: {
-              backgroundColor: "rgba(112, 128, 144, 0.6)",
+              backgroundColor: "rgba(112, 128, 144, 0.9)",
               color: "white",
             },
           }}
         >
           <MenuItem
-            onClick={() => handleSortByChange("Popular")}
+            onClick={() => handleSortByChange("Highest")}
             style={{
-              fontWeight: selectedSortBy === "Popular" ? "bold" : "normal",
+              fontWeight: selectedSortBy === "Highest" ? "bold" : "normal",
             }}
           >
-            Popular
+            Highest First
+          </MenuItem>
+          <MenuItem
+            onClick={() => handleSortByChange("Lowest")}
+            style={{
+              fontWeight: selectedSortBy === "Lowest" ? "bold" : "normal",
+            }}
+          >
+            Lowest First
           </MenuItem>
           <MenuItem
             onClick={() => handleSortByChange("Recent")}
@@ -135,14 +132,6 @@ export default function SortButtons({ slug, sort, rate }) {
             }}
           >
             Recent
-          </MenuItem>
-          <MenuItem
-            onClick={() => handleSortByChange("Friends")}
-            style={{
-              fontWeight: selectedSortBy === "Friends" ? "bold" : "normal",
-            }}
-          >
-            Friends Reviews
           </MenuItem>
         </Menu>
       </div>

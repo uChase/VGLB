@@ -35,7 +35,13 @@ async function getReviewAndUser(
   rateSort = "All",
   sort = "Popular"
 ) {
-  const gameReviewData = await getGameDbData(gameId, 15, rateSort, sort);
+  const gameReviewData = await getGameDbData(
+    gameId,
+    15,
+    rateSort,
+    sort,
+    userId
+  );
   gameReviewData.reviews.map(async (rev) => {
     const author = await getUserById(rev.authorId);
     rev.author = author;

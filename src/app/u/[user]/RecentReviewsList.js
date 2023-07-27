@@ -30,8 +30,17 @@ async function RecentReviewsList({ user }) {
   for (let rev of reviews) {
     gamers.push(rev.gameId);
   }
-
-  const games = await getGamesByIds(gamers);
+  let games = [];
+  if (gamers.length != 0) {
+    games = await getGamesByIds(gamers);
+  }
+  const sortedGameDatas = reviews.map((rev) => {
+    const game = games.find((game) => game?.id == rev.gameId);
+    rev.slug = game.slug;
+    rev.cover = game.cover;
+    rev.name = game.name;
+    return rev;
+  });
 
   return (
     <div className="flex flex-col mt-3">
@@ -39,9 +48,13 @@ async function RecentReviewsList({ user }) {
         <h1 className="text-slate-300 text-lg ">Recent Reviews</h1>
       </div>
       <div className="flex flex-row">
-        {games.map((game, index) => {
-          const stars = Math.floor(reviews[index].Stars);
-          const halfStar = reviews[index].Stars % 1 !== 0;
+        {sortedGameDatas.map((game, index) => {
+          let stars = Math.floor(game?.Stars);
+          let halfStar = game?.Stars % 1 !== 0;
+          if (game?.Stars == 0.5) {
+            halfStar = true;
+          }
+
           return (
             <Link href={`/games/${game?.slug}/review/${reviews[index]?.id}`}>
               <div
@@ -59,7 +72,6 @@ async function RecentReviewsList({ user }) {
                 </div>
               </div>
               <div className="flex flex-row  items-center">
-                {" "}
                 {[...Array(stars)].map((e, i) => (
                   <Star key={i} />
                 ))}

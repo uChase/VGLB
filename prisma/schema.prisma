@@ -17,6 +17,7 @@ model User {
   email          String?             @unique
   emailVerified  DateTime?
   image          String?
+  border         String?             @default("")
   imageVersion   Int                 @default(0)
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
@@ -164,7 +165,7 @@ model Profile {
   location        String?
   user            User             @relation(fields: [userId], references: [id])
   userId          String           @unique
-  favGames        String[]
+  favGames        String[]         @default(["empty", "empty", "empty", "empty", "empty"])
   reviewSpread    Int[]            @default([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   reviewCount     Int              @default(0)
   profileComments ProfileComment[]

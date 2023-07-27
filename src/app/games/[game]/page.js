@@ -82,8 +82,11 @@ async function getFriendsReview(userId, gameId) {
         },
         gameId: gameId,
       },
-      include: {
-        comments: true,
+      take: 9,
+      select: {
+        id: true,
+        Stars: true,
+        authorId: true,
       },
     });
 
@@ -117,6 +120,9 @@ export default async function Page({ params }) {
   let isPlaylisted = false;
   const playlist = await getPlaylist(session?.user?.id);
   const friendsReviews = await getFriendsReview(session?.user?.id, game[0].id);
+  // for (let i = 0; i < 40; i++) {
+  //   friendsReviews.push({});
+  // }
 
   if (playlist) {
     if (playlist.includes(game[0].id)) {
@@ -211,6 +217,15 @@ export default async function Page({ params }) {
                     {friendsReviews.map((rev) => (
                       <FriendReview review={rev} game={params.game} />
                     ))}
+                  </div>
+                  <div className="  flex flex-row justify-center mt-3">
+                    {friendsReviews.length >= 9 ? (
+                      <Link href={`/games/${params.game}/review/all`}>
+                        <button className=" cursor-pointer justify-center text-lg border border-slate-400 p-3 rounded-lg bg-slate-800 hover:bg-blue-800 font-semibold bg-opacity-60 mt-2 ">
+                          See All Friends Reviews
+                        </button>
+                      </Link>
+                    ) : null}
                   </div>
                 </div>
               ) : null}

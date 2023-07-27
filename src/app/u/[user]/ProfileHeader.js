@@ -39,7 +39,7 @@ async function ProfileHeader({ user }) {
     },
   });
   if (!userWithProfile) {
-    return "user does not exist";
+    return null;
   }
 
   const currentUser = await getServerSession(authOptions);
@@ -61,7 +61,26 @@ async function ProfileHeader({ user }) {
         <div className="flex flex-row  ">
           <div className="flex flex-col items-center">
             <div style={{ width: 164, height: 164, overflow: "hidden" }}>
-              <Image height={164} width={164} src={userWithProfile.image} />
+              <Image
+                height={164}
+                width={164}
+                style={{ borderRadius: "5%" }}
+                src={userWithProfile.image}
+              />
+              <img
+                src={"/Vg7.gif"}
+                alt="border"
+                style={{
+                  position: "absolute",
+                  // top: "0",
+                  // left: "0",
+                  width: "164px",
+                  height: "164px",
+                  transform: "translateY(-164px)",
+
+                  borderRadius: "5%", // or you could use a percentage like "10%"
+                }}
+              />
             </div>
 
             {currentUser ? (
@@ -104,36 +123,44 @@ async function ProfileHeader({ user }) {
           </div>
         </div>
         <div className="flex flex-row mt-8">
-          <div className="w-1/4  mr-1 text-center flex flex-col ">
+          <div className="w-1/4  mr-1 text-center flex flex-col cursor-pointer ">
             <div className=" px-5 border-r-2">
-              <p className="text-2xl font-bold">
-                {userWithProfile.profile.reviewCount}
-              </p>
-              <p className="text-gray-500">Games</p>
+              <Link href={`/u/${username}/games`}>
+                <p className="text-2xl font-bold">
+                  {userWithProfile.profile.reviewCount}
+                </p>
+                <p className="text-gray-500">Games</p>
+              </Link>
             </div>
           </div>
           <div className="w-1/4 mr-2 text-center flex flex-col ">
             <div className=" px-5 border-r-2">
-              <p className="text-2xl font-bold">
-                {userWithProfile.profile.playList.length}
-              </p>
-              <p className="text-gray-500">Playlisted</p>
+              <Link href={`/u/${username}/playlist`}>
+                <p className="text-2xl font-bold">
+                  {userWithProfile.profile.playList.length}
+                </p>
+                <p className="text-gray-500">Playlisted</p>
+              </Link>
             </div>
           </div>
           <div className="w-1/4  mr-1 text-center flex flex-col ">
             <div className=" px-5 border-r-2">
-              <p className="text-2xl font-bold">
-                {userWithProfile.followedBy.length}
-              </p>
-              <p className="text-gray-500">Followers</p>
+              <Link href={`/u/${username}/following`}>
+                <p className="text-2xl font-bold">
+                  {userWithProfile.followedBy.length}
+                </p>
+                <p className="text-gray-500">Following</p>
+              </Link>
             </div>
           </div>
           <div className="w-1/4 mr-1  text-center flex flex-col ">
             <div className=" px-5 ">
-              <p className="text-2xl font-bold">
-                {userWithProfile.following.length}
-              </p>
-              <p className="text-gray-500">Following</p>
+              <Link href={`/u/${username}/followers`}>
+                <p className="text-2xl font-bold">
+                  {userWithProfile.following.length}
+                </p>
+                <p className="text-gray-500">Followers</p>
+              </Link>
             </div>
           </div>
         </div>

@@ -13,17 +13,17 @@ function FriendReview({ game, review }) {
         <div>
           <div
             onClick={() => {
-              router.push(`/games/${game}/review/${review.id}`);
+              router.push(`/games/${game}/review/${review?.id}`);
             }}
             className=" cursor-pointer inline-flex flex-col justify-center items-center"
           >
-            <Image src={review.author.image} width={50} height={50} />
+            <Image src={review?.author?.image} width={50} height={50} />
             <p className=" align-middle text-md font-semibold">
-              {review.author.username}
+              {review?.author?.username}
             </p>
-            {review.Stars > 0 ? (
+            {review?.Stars > 0 ? (
               <Rating
-                value={review.Stars}
+                value={review?.Stars}
                 readOnly
                 sx={{ "& .MuiRating-icon": { color: "#F1FAEE" } }}
                 precision={0.5}

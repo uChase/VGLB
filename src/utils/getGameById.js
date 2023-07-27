@@ -22,6 +22,10 @@ export async function getGameById(id) {
 
 export async function getGamesByIds(ids) {
   // Convert array of IDs to a comma-separated string
+
+  if (ids.length == 0) {
+    return [];
+  }
   const idString = ids.filter((id) => id !== "empty").join(",");
 
   const response = await fetch("https://api.igdb.com/v4/games", {
@@ -32,7 +36,7 @@ export async function getGamesByIds(ids) {
       Authorization: "Bearer " + accessToken,
       "Content-Type": "text/plain",
     },
-    body: `fields name, cover.image_id, slug; where id = (${idString});`, // Update the query to get multiple games
+    body: `fields name, cover.image_id, slug; where id = (${idString}); limit 50;`, // Update the query to get multiple games
   });
 
   const data = await response.json();

@@ -3,20 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-async function getGames(favGames) {
-  let arr = [];
-  for (let i = 0; i < 5; i++) {
-    if (favGames[i] != "empty") {
-      arr[i] = (await getGameById(parseInt(favGames[i])))[0];
-    } else {
-      arr[i] = "empty";
+async function FavGamesList({ favGames }) {
+  let gameAr = [];
+  let favArr = favGames;
+
+  for (let el of favGames) {
+    if (el != "empty") {
+      gameAr = await getGamesByIds(favGames);
+      break;
     }
   }
-  return arr;
-}
-
-async function FavGamesList({ favGames }) {
-  const gameAr = await getGamesByIds(favGames);
+  const sortedGames = favArr.map((val) => {
+    return gameAr.find((game) => game.id == val);
+  });
 
   return (
     <div className="flex flex-col">
@@ -27,15 +26,18 @@ async function FavGamesList({ favGames }) {
       <div className="flex flex-row">
         {(() => {
           const reorderedArray = [
-            gameAr[3], // 4th game
-            gameAr[1], // 2nd game
-            gameAr[0], // 1st game
-            gameAr[2], // 3rd game
-            gameAr[4], // 5th game
+            sortedGames[3], // 4th game
+            sortedGames[1], // 2nd game
+            sortedGames[0], // 1st game
+            sortedGames[2], // 3rd game
+            sortedGames[4], // 5th game
           ];
 
           return reorderedArray.map((game, index) => {
             if (game == "empty") {
+              return null;
+            }
+            if (!game) {
               return null;
             }
 

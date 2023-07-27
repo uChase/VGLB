@@ -1,28 +1,51 @@
-import GameBar from "@/components/GameBar";
-import React from "react";
-import FavGamesList from "./FavGamesList";
-import RecentReviewsList from "./RecentReviewsList";
-import Link from "next/link";
-import getGameDbData from "@/utils/getGameDbData";
-import getUserById from "@/utils/getUserById";
-import prisma from "@/db";
-import { getSession } from "next-auth/react";
-import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import getIsLiked from "@/utils/getIsLiked";
 import GameHomePageReview from "@/components/GameHomePageReview";
 import { getGamesByIds } from "@/utils/getGameById";
+import getIsLiked from "@/utils/getIsLiked";
+import { getServerSession } from "next-auth";
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
-async function getPopularReviews(author, userId) {
+async function getPopularReviews(username, userId, skip = 0, sort = "") {
+  const user = await prisma.user.findUnique({
+    where: {
+      username: username,
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (!user) {
+    return false;
+  }
+  const count = await prisma.review.count({
+    where: {
+      authorId: user?.id,
+      content: {
+        not: null,
+        not: "",
+      },
+    },
+  });
   const reviews = await prisma.review.findMany({
     where: {
-      authorId: author,
+      authorId: user?.id,
+      content: {
+        not: null,
+        not: "",
+      },
     },
-    orderBy: {
-      likesCount: "desc",
-    },
-    take: 3,
+
+    orderBy:
+      sort === "Highest"
+        ? { likesCount: "desc" }
+        : sort === "Lowest"
+        ? { likesCount: "asc" }
+        : { createdAt: "desc" },
+
+    skip: skip,
+    take: 10,
     include: {
       author: {
         select: {
@@ -50,11 +73,12 @@ async function getPopularReviews(author, userId) {
     }
   }
 
-  let gameIds = [
-    reviews[0]?.game?.gameId,
-    reviews[1]?.game?.gameId,
-    reviews[2]?.game?.gameId,
-  ];
+  let gameIds = [];
+
+  for (let rev of reviews) {
+    gameIds.push(rev?.game?.gameId);
+  }
+
   gameIds = gameIds.filter((item) => item !== undefined);
 
   const gameDatas = await getGamesByIds(gameIds);
@@ -68,50 +92,30 @@ async function getPopularReviews(author, userId) {
     reviews[i].cover = sortedGameDatas[i]?.cover.image_id;
   }
 
-  return reviews;
+  return { reviews, count };
 }
 
-async function page({ params }) {
+async function page({ params, searchParams }) {
   const session = await getServerSession(authOptions);
-  const userWithProfile = await prisma.user.findUnique({
-    where: {
-      username: params.user,
-    },
-    select: {
-      image: true, // select the image field from user
-      profile: true,
-      id: true,
-    },
-  });
-  if (!userWithProfile) {
-    return "user does not exist";
+  let page = 1;
+  if (searchParams?.page) {
+    page = searchParams.page;
   }
-  const reviews = await getPopularReviews(
-    userWithProfile.id,
-    session?.user?.id
+  const { reviews, count } = await getPopularReviews(
+    params.user,
+    session?.user?.id,
+    (page - 1) * 10
   );
-
-  const barHeights = userWithProfile.profile.reviewSpread
-    .slice(0, 10)
-    .map((count) => {
-      if (userWithProfile.profile.reviewCount == 0) {
-        return 0;
-      }
-      return (count / userWithProfile.profile.reviewCount) * 100;
-    });
+  if (!reviews) {
+    return "no user";
+  }
 
   return (
     <div className=" flex flex-row justify-evenly ">
+      {" "}
       <div className="w-1/2">
-        <FavGamesList favGames={userWithProfile.profile.favGames} />
-        <RecentReviewsList user={userWithProfile.id} />
         <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-end">
-          <h2 className=" text-slate-300 text-lg">Popular Reviews </h2>
-          <Link href={`/u/${params.user}/reviews`}>
-            <h3 className="text-slate-300 cursor-pointer text-sm hover:text-slate-500">
-              See All
-            </h3>
-          </Link>
+          <h2 className=" text-slate-300 text-lg">All Reviews </h2>
         </div>
         {reviews.map((rev) => (
           <>
@@ -152,22 +156,28 @@ async function page({ params }) {
             </div>
           </>
         ))}
+        <Pagination
+          itemsPerPage={10}
+          totalItems={count}
+          user={params.user}
+          sort={"Popular"}
+        />
       </div>
       <div className=" flex flex-col items-center">
         <div className="flex flex-col bg-slate-950 rounded-lg p-4 w-64 mt-2">
-          <div className="text-blue-500 hover:bg-slate-900 py-2 px-4 text-lg rounded font-bold cursor-pointer">
-            Home
-          </div>
+          <Link href={`/u/${params.user}`}>
+            <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
+              Home
+            </div>
+          </Link>
           <Link href={`/u/${params.user}/games`}>
             <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
               Games
             </div>
           </Link>
-          <Link href={`/u/${params.user}/reviews`}>
-            <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
-              Reviews
-            </div>
-          </Link>
+          <div className="text-blue-500 hover:bg-slate-900 py-2 px-4 text-lg rounded font-bold cursor-pointer">
+            Reviews
+          </div>
           <Link href={`/u/${params.user}/playlist`}>
             <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
               PlayList
@@ -190,17 +200,33 @@ async function page({ params }) {
             Currently Playing
           </div>
         </div>
-        <div className=" w-3/4 mt-3">
-          <GameBar
-            barHeights={barHeights}
-            spread={userWithProfile.profile.reviewSpread}
-            isProfile={true}
-            slug={params.user}
-          />
-        </div>
       </div>
     </div>
   );
 }
 
 export default page;
+
+function Pagination({ itemsPerPage, totalItems, user, sort }) {
+  const pageNumbers = [];
+
+  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  return (
+    <nav className=" w-full flex flex-row justify-center">
+      <ul className="pagination flex flex-row gap-5">
+        {pageNumbers.map((number) => (
+          <li key={number} className="page-item">
+            <Link href={`/u/${user}/reviews?page=${number}`}>
+              <div className=" font-bold text-xl hover:text-slate-500">
+                {number}
+              </div>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
