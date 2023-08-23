@@ -153,9 +153,11 @@ async function page({ params, searchParams }) {
                   PlayList
                 </div>
               </Link>
-              <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
-                Lists
-              </div>
+              <Link href={`/u/${params.user}/list`}>
+                <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
+                  Lists
+                </div>
+              </Link>
               <Link href={`/u/${params.user}/followers`}>
                 <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
                   Followers

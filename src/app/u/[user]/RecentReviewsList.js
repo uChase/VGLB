@@ -47,7 +47,7 @@ async function RecentReviewsList({ user }) {
       <div className="mb-6 border-b border-slate-500 py-1 ">
         <h1 className="text-slate-300 text-lg ">Recent Reviews</h1>
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row justify-center">
         {sortedGameDatas.map((game, index) => {
           let stars = Math.floor(game?.Stars);
           let halfStar = game?.Stars % 1 !== 0;

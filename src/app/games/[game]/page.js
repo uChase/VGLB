@@ -49,8 +49,16 @@ function selectRandomArtwork(artworks, screenshots) {
   return artworks[randomIndex].image_id;
 }
 
-async function getReviewAndUser(gameId, userId, ratingSort, sort) {
-  const gameReviewData = await getGameDbData(gameId, 3, ratingSort, sort);
+async function getReviewAndUser(gameId, userId, ratingSort, sort, name, slug) {
+  const gameReviewData = await getGameDbData(
+    gameId,
+    3,
+    ratingSort,
+    sort,
+    null,
+    name,
+    slug
+  );
   gameReviewData.reviews.map(async (rev) => {
     const author = await getUserById(rev.authorId);
     rev.author = author;
@@ -104,11 +112,16 @@ async function getFriendsReview(userId, gameId) {
 export default async function Page({ params }) {
   const session = await getServerSession(authOptions);
   const game = await getGame(params.game);
+
+  const isFuture =
+    new Date(game[0]?.release_dates?.[0]?.date * 1000) > new Date();
   const gameReviewData = await getReviewAndUser(
     game[0].id,
     session?.user?.id,
     "All",
-    "Popular"
+    "Popular",
+    game[0].name,
+    params.game
   );
   const recentReviewData = await getReviewAndUser(
     game[0].id,
@@ -294,6 +307,7 @@ export default async function Page({ params }) {
                 hasPlayListed={isPlaylisted}
                 gameId={game[0].id}
                 userId={session?.user?.id}
+                isFuture={isFuture}
               />
             )}
           </div>

@@ -15,8 +15,21 @@ import getIsReplyLiked from "@/utils/getIsReplyLiked";
 import { thumbsDownReply, thumbsUpReply } from "@/utils/thumbsReply";
 import { addReply } from "@/utils/loadReplies";
 import { useRouter } from "next/navigation";
+import { sendNotification } from "@/utils/notificationUtils";
+import { NotifType, PostType } from "@prisma/client";
+import { getUserByUsername } from "@/utils/getUserById";
 
-function ReplyList({ reply, user, commentId }) {
+function extractNames(text) {
+  const regex = /@(\w+)/g;
+  const namesSet = new Set();
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    namesSet.add(match[1]);
+  }
+  return Array.from(namesSet);
+}
+
+function ReplyList({ reply, user, commentId, commentAuthor }) {
   const [thumbComment, setThumbComment] = useState(null);
   const [replyOpen, setReplyOpen] = useState(false);
   const [replyText, setReplyText] = useState(`@${reply.author.username} `);
@@ -25,7 +38,29 @@ function ReplyList({ reply, user, commentId }) {
 
   const handlePostReply = async () => {
     if (replyText != "") {
-      const rep = await addReply(user?.id, commentId, replyText);
+      const rep = await addReply(
+        user?.id,
+        commentId,
+        replyText,
+        commentAuthor,
+        user.username
+      );
+      const userReplies = extractNames(replyText);
+      if (userReplies.length > 0) {
+        for (let username of userReplies) {
+          const notifUser = await getUserByUsername(username);
+          console.log(notifUser);
+          if (notifUser) {
+            await sendNotification(
+              notifUser.id,
+              user.username,
+              NotifType.REPLY,
+              PostType.REPLY,
+              commentId
+            );
+          }
+        }
+      }
       setReplyOpen(false);
       setReplyText(`@${reply.author.username} `);
       router.refresh();

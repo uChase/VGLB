@@ -28,6 +28,7 @@ import getTldrColor from "@/utils/tldrFunction";
 import Checkbox from "@mui/material/Checkbox";
 import InfoIcon from "@mui/icons-material/Info";
 import { isRatioedFunc } from "@/utils/loadComment";
+import ProfilePicture from "./ProfilePicture";
 
 function GameHomePageReview({
   game,
@@ -63,7 +64,15 @@ function GameHomePageReview({
     // After successful submission or upon an error, you can close the reply box using setReplyOpen(false).
     // If you wish, you could even show a success message or handle errors.
     if (replyText != "") {
-      await addComment(user.id, review.id, replyText, checked);
+      await addComment(
+        user.id,
+        review.id,
+        replyText,
+        checked,
+        review.authorId,
+        user.username,
+        review.notifEnable
+      );
     }
     router.refresh();
     setReplyText("");
@@ -92,7 +101,13 @@ function GameHomePageReview({
       }
       review.likesCount += 1;
       setThumb("up");
-      await thumbsUp(review.id, user.id);
+      await thumbsUp(
+        review.id,
+        user.id,
+        review.authorId,
+        user.username,
+        review.notifEnable
+      );
     } else {
       alert("sign in to rate");
     }
@@ -106,7 +121,13 @@ function GameHomePageReview({
         review.likesCount -= 1;
       }
       review.dislikesCount += 1;
-      await thumbsDown(review.id, user.id);
+      await thumbsDown(
+        review.id,
+        user.id,
+        review.authorId,
+        user.username,
+        review.notifEnable
+      );
 
       setThumb("down");
     } else {
@@ -164,11 +185,13 @@ function GameHomePageReview({
                 router.push(`/u/${review.author.username}`);
               }}
             >
-              <Image
-                src={review.author.image}
+              <ProfilePicture
+                image={review?.author?.image}
                 width={isFullscreened ? 120 : 70}
                 height={isFullscreened ? 120 : 70}
+                border={review?.author?.border}
               />
+
               <p className="text-lg font-semibold">{review.author.username}</p>
             </div>
             {isAuthor && (
@@ -182,7 +205,7 @@ function GameHomePageReview({
                 </button>
               </div>
             )}
-            {isAuthor && (
+            {isAuthor && isFullscreened && (
               <div className="mt-3">
                 <button
                   className="text-red-500 font-semibold flex items-center"
@@ -238,6 +261,14 @@ function GameHomePageReview({
                   </p>
                 </div>
               )}
+              <div>
+                {" "}
+                <SettingsMenu
+                  isAuthor={isAuthor}
+                  isMuted={review.notifEnable}
+                  reviewId={review.id}
+                />
+              </div>
             </div>
             {!isFullscreened ? (
               <div className="mt-2">
@@ -512,3 +543,88 @@ function GameHomePageReview({
 }
 
 export default GameHomePageReview;
+
+import { Menu, Transition } from "@headlessui/react";
+import { FaEllipsisV } from "react-icons/fa";
+import {
+  muteReviewNotification,
+  unMuteReviewNotification,
+} from "@/utils/muteNotification";
+
+function SettingsMenu({ isAuthor, isMuted: mute, reviewId }) {
+  const [isMuted, setIsMute] = useState(mute);
+  const handleMute = async () => {
+    await muteReviewNotification(reviewId);
+    setIsMute(true);
+  };
+  const handleUnMute = async () => {
+    await unMuteReviewNotification(reviewId);
+    setIsMute(false);
+  };
+
+  return (
+    <Menu as="div" className="relative inline-block text-left">
+      <div>
+        <Menu.Button className="transition-all duration-200 inline-flex items-center justify-center w-full rounded-md shadow-sm px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-600 hover:bg-opacity-60 focus:outline-none focus:ring-slate-400">
+          <FaEllipsisV />
+        </Menu.Button>
+      </div>
+
+      <Transition
+        as={React.Fragment}
+        enter="transition ease-out duration-100"
+        enterFrom="transform opacity-0 scale-95"
+        enterTo="transform opacity-100 scale-100"
+        leave="transition ease-in duration-75"
+        leaveFrom="transform opacity-100 scale-100"
+        leaveTo="transform opacity-0 scale-95"
+      >
+        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-slate-900 text-slate-100 ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="py-1">
+            {isAuthor ? (
+              isMuted ? (
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={handleMute}
+                      className={`${
+                        active ? "transition bg-slate-600 " : ""
+                      } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                    >
+                      Mute Notifications
+                    </button>
+                  )}
+                </Menu.Item>
+              ) : (
+                <Menu.Item>
+                  {({ active }) => (
+                    <button
+                      onClick={handleUnMute}
+                      className={`${
+                        active ? "transition bg-slate-600 " : ""
+                      } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                    >
+                      Unmute Notifications
+                    </button>
+                  )}
+                </Menu.Item>
+              )
+            ) : (
+              <Menu.Item>
+                {({ active }) => (
+                  <button
+                    className={`${
+                      active ? "transition bg-slate-600 " : ""
+                    } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left text-red-600`}
+                  >
+                    Report
+                  </button>
+                )}
+              </Menu.Item>
+            )}
+          </div>
+        </Menu.Items>
+      </Transition>
+    </Menu>
+  );
+}

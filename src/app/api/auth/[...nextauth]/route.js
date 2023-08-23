@@ -63,6 +63,7 @@ export const authOptions = {
           username: token.username,
           image: token.image,
           imageVersion: token.imageVersion,
+          border: token.border,
         },
       };
     },
@@ -80,6 +81,7 @@ export const authOptions = {
           username: user.username,
           image: user.image,
           imageVersion: user.imageVersion,
+          border: user.border,
         };
       }
       return token;

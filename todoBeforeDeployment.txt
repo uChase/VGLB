@@ -1,11 +1,10 @@
 get real database - 
 go to pushImage - 
-limit username -
+limit textINputs -
 add captcha - 
 add profileBackgrounds -
-add pfpBorders -
 make sure all api calls are efficient -
 cache db data-
-lists -
 ADD LOADING SCREENS - 
 convert border to s3 -
+make it so you cant spam notifications - 

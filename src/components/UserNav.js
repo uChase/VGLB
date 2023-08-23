@@ -4,8 +4,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
+import ProfilePicture from "./ProfilePicture";
 
-function UserNav({ username, pfpSrc }) {
+function UserNav({ username, pfpSrc, border }) {
   const router = useRouter();
 
   if (username == null) {
@@ -16,11 +17,12 @@ function UserNav({ username, pfpSrc }) {
     <Menu as="div" className="relative inline-block text-left">
       <div>
         <Menu.Button className="transition-all duration-200 inline-flex items-center justify-center w-full rounded-md   shadow-sm px-4 py-2  text-sm font-medium text-slate-100 hover:bg-slate-600 hover:bg-opacity-60 focus:outline-none  focus:ring-slate-400">
-          <Image
-            src={pfpSrc}
-            width={40}
+          <ProfilePicture
+            image={pfpSrc}
             height={40}
-            className="h-10 w-10 rounded-md"
+            width={40}
+            border={border}
+            style={null}
           />
           <p className="ml-2">{username}</p>
           <svg
@@ -74,6 +76,20 @@ function UserNav({ username, pfpSrc }) {
                   } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
                 >
                   Edit Profile
+                </button>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <button
+                  onClick={() => {
+                    router.push("/profile/editavatar");
+                  }}
+                  className={`${
+                    active ? "transition bg-slate-600 " : ""
+                  } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                >
+                  Edit Avatar
                 </button>
               )}
             </Menu.Item>

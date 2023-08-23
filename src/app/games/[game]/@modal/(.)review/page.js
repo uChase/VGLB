@@ -103,10 +103,15 @@ export default function ReviewModal({ params }) {
   const [consoleSelection, setConsoleSelection] = React.useState("");
   const [playStatus, setPlayStatus] = React.useState("");
   const [reviewTitle, setReviewTitle] = React.useState("");
+  const router = useRouter();
 
   React.useEffect(() => {
     async function getData() {
       const game = await getGameBySlug(params.game);
+
+      if (new Date(game[0].release_dates?.[0].date * 1000) > new Date()) {
+        router.back();
+      }
       const review = await getReviewByUserId(session.user.id, game[0].id);
       if (review) {
         setStars(review.Stars);
@@ -142,8 +147,6 @@ export default function ReviewModal({ params }) {
 
     getPlatforms();
   }, []);
-
-  const router = useRouter();
 
   const { data: session, status } = useSession({
     required: true,

@@ -1,14 +1,17 @@
 "use server";
 
 import prisma from "@/db";
+import { sendNotification } from "./notificationUtils";
+import { NotifType } from "@prisma/client";
 
-export default async function followAsync(userId, otherId) {
+export default async function followAsync(userId, otherId, currentUsername) {
   const newFollow = await prisma.follows.create({
     data: {
       followerId: userId,
       followingId: otherId,
     },
   });
+  await sendNotification(otherId, currentUsername, NotifType.FOLLOW);
   return newFollow;
 }
 

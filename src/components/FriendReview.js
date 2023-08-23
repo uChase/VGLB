@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import ProfilePicture from "./ProfilePicture";
 
 function FriendReview({ game, review }) {
   const router = useRouter();
@@ -17,7 +18,13 @@ function FriendReview({ game, review }) {
             }}
             className=" cursor-pointer inline-flex flex-col justify-center items-center"
           >
-            <Image src={review?.author?.image} width={50} height={50} />
+            <ProfilePicture
+              image={review?.author?.image}
+              width={50}
+              height={50}
+              border={review?.author?.border}
+            />
+            {/* <Image src={review?.author?.image} width={50} height={50} /> */}
             <p className=" align-middle text-md font-semibold">
               {review?.author?.username}
             </p>

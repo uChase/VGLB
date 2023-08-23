@@ -163,7 +163,7 @@ async function getReviewComments(reviewId, userId, ratio) {
       },
       take: 10,
     });
-    return userComments;
+    return { comments: userComments, remainingSlots: 10 };
   }
 }
 

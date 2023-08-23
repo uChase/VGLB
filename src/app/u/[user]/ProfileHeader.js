@@ -7,6 +7,7 @@ import FavGamesList from "./FavGamesList";
 import FollowButton from "./FollowButton";
 import { VscLocation } from "react-icons/vsc";
 import Link from "next/link";
+import ProfilePicture from "@/components/ProfilePicture";
 
 async function ProfileHeader({ user }) {
   const username = user;
@@ -17,6 +18,7 @@ async function ProfileHeader({ user }) {
     },
     select: {
       image: true, // select the image field from user
+      border: true,
       profile: {
         select: {
           reviewCount: true,
@@ -61,41 +63,36 @@ async function ProfileHeader({ user }) {
         <div className="flex flex-row  ">
           <div className="flex flex-col items-center">
             <div style={{ width: 164, height: 164, overflow: "hidden" }}>
-              <Image
+              <ProfilePicture
+                image={userWithProfile?.image}
                 height={164}
                 width={164}
-                style={{ borderRadius: "5%" }}
-                src={userWithProfile.image}
-              />
-              <img
-                src={"/Vg7.gif"}
-                alt="border"
-                style={{
-                  position: "absolute",
-                  // top: "0",
-                  // left: "0",
-                  width: "164px",
-                  height: "164px",
-                  transform: "translateY(-164px)",
-
-                  borderRadius: "5%", // or you could use a percentage like "10%"
-                }}
+                border={userWithProfile?.border}
+                style={null}
               />
             </div>
 
             {currentUser ? (
               <>
                 {currentUser?.user?.id == userWithProfile.id ? (
-                  <Link href={"/profile/editprofile"}>
-                    <div className=" text-lg mt-4 text-center border rounded-lg py-2 cursor-pointer bg-slate-600 bg-opacity-40 hover:bg-slate-950 px-4 mb-5">
-                      Edit Profile
-                    </div>
-                  </Link>
+                  <div className="flex flex-row my-2">
+                    <Link href={"/profile/editprofile"}>
+                      <div className=" text-lg mt-2 text-center border rounded-lg py-2 cursor-pointer bg-slate-600 bg-opacity-40 hover:bg-slate-950 px-4 mr-3">
+                        Edit Profile
+                      </div>
+                    </Link>
+                    <Link href={"/profile/editavatar"}>
+                      <div className=" text-lg mt-2 text-center border rounded-lg py-2 cursor-pointer bg-slate-600 bg-opacity-40 hover:bg-slate-950 px-4 mb-1">
+                        Edit Avatar
+                      </div>
+                    </Link>
+                  </div>
                 ) : (
                   <FollowButton
                     userId={currentUser?.user?.id}
                     otherId={userWithProfile.id}
                     alreadyFollow={alreadyFollow}
+                    currentUsername={currentUser?.user?.username}
                   />
                 )}
               </>

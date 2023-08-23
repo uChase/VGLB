@@ -2,8 +2,15 @@
 
 import prisma from "@/db";
 import getIsLiked from "./getIsLiked";
-import { Prisma, Opinion } from "@prisma/client";
-export default async function thumbsUp(revId, uId) {
+import { Prisma, Opinion, PostType, NotifType } from "@prisma/client";
+import { sendNotification } from "./notificationUtils";
+export default async function thumbsUp(
+  revId,
+  uId,
+  authorId,
+  sendUsername,
+  notifEnable
+) {
   const isLiked = await getIsLiked(revId, uId);
   if (isLiked.opinion === Opinion.NONE) {
     const data = await prisma.userReviewOpinion.upsert({
@@ -30,6 +37,16 @@ export default async function thumbsUp(revId, uId) {
         likesCount: { increment: 1 },
       },
     });
+
+    if (notifEnable && authorId != uId) {
+      await sendNotification(
+        authorId,
+        sendUsername,
+        NotifType.LIKE,
+        PostType.REVIEW,
+        revId
+      );
+    }
   } else if (isLiked.opinion === Opinion.LIKE) {
     return;
   } else {

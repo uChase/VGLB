@@ -17,6 +17,19 @@ import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import ReplyList from "./ReplyList";
 import { useRouter } from "next/navigation";
+import { getUserByUsername } from "@/utils/getUserById";
+import { sendNotification } from "@/utils/notificationUtils";
+import { NotifType, PostType } from "@prisma/client";
+
+function extractNames(text) {
+  const regex = /@(\w+)/g;
+  const namesSet = new Set();
+  let match;
+  while ((match = regex.exec(text)) !== null) {
+    namesSet.add(match[1]);
+  }
+  return Array.from(namesSet);
+}
 
 function CommentList({ comment, user, revId, reviewLikes }) {
   const [thumbComment, setThumbComment] = React.useState(null);
@@ -51,6 +64,7 @@ function CommentList({ comment, user, revId, reviewLikes }) {
       setReplies(replies.concat(userReplies));
     }
 
+    console.log(comment);
     checkIfReplies().then((bool) => {
       if (bool) {
         setAreReplies(true);
@@ -61,7 +75,29 @@ function CommentList({ comment, user, revId, reviewLikes }) {
 
   const handlePostReply = async () => {
     if (replyText != "") {
-      const rep = await addReply(user?.id, comment.id, replyText);
+      const rep = await addReply(
+        user?.id,
+        comment.id,
+        replyText,
+        comment.authorId,
+        user.username
+      );
+      const userReplies = extractNames(replyText);
+      if (userReplies.length > 0) {
+        for (let username of userReplies) {
+          const notifUser = await getUserByUsername(username);
+          console.log(notifUser);
+          if (notifUser) {
+            await sendNotification(
+              notifUser.id,
+              user.username,
+              NotifType.REPLY,
+              PostType.REPLY,
+              comment.id
+            );
+          }
+        }
+      }
       setReplyOpen(false);
       setReplyText("");
       replies.push(rep);
@@ -130,7 +166,13 @@ function CommentList({ comment, user, revId, reviewLikes }) {
       }
       comment.totalLikes += 1;
       setThumbComment("up");
-      await thumbsUpComment(comment.id, user?.id, revId);
+      await thumbsUpComment(
+        comment.id,
+        user?.id,
+        revId,
+        comment.authorId,
+        user.username
+      );
     } else {
       alert("sign in to rate");
     }
@@ -145,7 +187,13 @@ function CommentList({ comment, user, revId, reviewLikes }) {
         comment.totalLikes -= 1;
       }
       comment.totalDislikes += 1;
-      await thumbsDownComment(comment.id, user?.id, revId);
+      await thumbsDownComment(
+        comment.id,
+        user?.id,
+        revId,
+        comment.authorId,
+        user.username
+      );
 
       setThumbComment("down");
     } else {
@@ -332,7 +380,12 @@ function CommentList({ comment, user, revId, reviewLikes }) {
           </div>
           {replies.map((reply) => {
             return (
-              <ReplyList reply={reply} user={user} commentId={comment.id} />
+              <ReplyList
+                reply={reply}
+                user={user}
+                commentId={comment.id}
+                commentAuthor={comment.authorId}
+              />
             );
           })}
           {showLoad ? (

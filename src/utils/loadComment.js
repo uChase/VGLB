@@ -4,7 +4,10 @@ import prisma from "@/db";
 
 export default async function loadMore(revId, skip, searchRatio, userId) {
   const reviewId = parseInt(revId);
-  const skipAmount = parseInt(skip);
+  let skipAmount = parseInt(skip);
+  if (skipAmount <= 0) {
+    skipAmount = 0;
+  }
   let comments;
   if (searchRatio == "true") {
     comments = await prisma.reviewComment.findMany({

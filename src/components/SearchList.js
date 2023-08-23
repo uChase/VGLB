@@ -42,6 +42,14 @@ function SearchList({ data, searchInput }) {
           >
             Users
           </p>
+          <p
+            className="underline cursor-pointer hover:text-slate-500"
+            onClick={() => {
+              router.push(`/search/lists/${searchInput}`);
+            }}
+          >
+            Lists
+          </p>
         </div>
       </div>
       <div className="grid grid-cols-6 gap-5">

@@ -3,10 +3,10 @@
 import followAsync, { unFollowAsync } from "@/utils/followAsync";
 import React, { useState } from "react";
 
-function FollowButton({ userId, otherId, alreadyFollow }) {
+function FollowButton({ userId, otherId, alreadyFollow, currentUsername }) {
   const [following, setFollowing] = useState(alreadyFollow);
   const handleFollow = async () => {
-    const following = await followAsync(userId, otherId);
+    const following = await followAsync(userId, otherId, currentUsername);
     setFollowing(true);
   };
 

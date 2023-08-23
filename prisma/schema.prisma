@@ -22,6 +22,7 @@ model User {
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
   username       String?             @unique
+  notifEnable    Boolean             @default(true)
   accounts       Account[]
   sessions       Session[]
   role           Role                @default(USER)
@@ -35,6 +36,9 @@ model User {
   replys         Replys[]
   ReplyOpinion   ReplyOpinion[]
   CommentOpinion CommentOpinion[]
+  List           List[]
+  ListOpinion    ListOpinion[]
+  Notification   Notification[]
 }
 
 model Account {
@@ -87,12 +91,14 @@ model Review {
   Stars         Float
   author        User                @relation(fields: [authorId], references: [id])
   authorId      String
+  notifEnable   Boolean             @default(true)
   opinions      UserReviewOpinion[]
   likesCount    Int                 @default(0)
   dislikesCount Int                 @default(0)
   tags          String[]
   tldr          String[]
   comments      ReviewComment[]
+  Notification  Notification[]
 
   @@unique([gameId, authorId])
 }
@@ -106,10 +112,12 @@ model ReviewComment {
   review        Review           @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   reviewId      Int
   content       String
+  notifEnable   Boolean          @default(true)
   opinions      CommentOpinion[]
   totalLikes    Int              @default(0)
   totalDislikes Int              @default(0)
   replys        Replys[]
+  Notification  Notification[]
 
   @@unique([reviewId, authorId, id])
 }
@@ -121,10 +129,12 @@ model Replys {
   authorId        String
   comment         ReviewComment  @relation(fields: [reviewCommentId], references: [id], onDelete: Cascade)
   reviewCommentId Int
+  notifEnable     Boolean        @default(true)
   content         String
   totalLikes      Int            @default(0)
   totalDislikes   Int            @default(0)
   ReplyOpinion    ReplyOpinion[]
+  Notification    Notification[]
 
   @@unique([reviewCommentId, authorId, id])
 }
@@ -187,6 +197,8 @@ model Game {
   reviewCount   Int      @default(0)
   averageRating Float    @default(0)
   reviewSpread  Int[]    @default([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
+  name          String   @default("")
+  slug          String   @default("")
   reviews       Review[]
 }
 
@@ -199,9 +211,68 @@ model Follows {
   @@id([followerId, followingId])
 }
 
+model List {
+  id           Int            @id @default(autoincrement())
+  author       User           @relation(fields: [authorId], references: [id])
+  authorId     String
+  name         String
+  notifEnable  Boolean        @default(true)
+  description  String?
+  gamesList    String[]       @default([])
+  isOrdered    Boolean        @default(false)
+  likes        Int            @default(0)
+  dislikes     Int            @default(0)
+  ListOpinion  ListOpinion[]
+  Notification Notification[]
+}
+
+model ListOpinion {
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String
+  list    List    @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId  Int
+  opinion Opinion @default(NONE)
+
+  @@id([userId, listId])
+}
+
+model Notification {
+  id           Int            @id @default(autoincrement())
+  user         User           @relation(fields: [userId], references: [id])
+  userId       String
+  sender       String
+  type         NotifType
+  read         Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  review       Review?        @relation(fields: [revId], references: [id], onDelete: Cascade)
+  revId        Int?
+  comment      ReviewComment? @relation(fields: [revCommentId], references: [id], onDelete: Cascade)
+  revCommentId Int?
+  reply        Replys?        @relation(fields: [replyId], references: [id], onDelete: Cascade)
+  replyId      Int?
+  list         List?          @relation(fields: [listId], references: [id], onDelete: Cascade)
+  listId       Int?
+  postType     PostType?
+}
+
 enum Role {
   USER
   ADMIN
+}
+
+enum NotifType {
+  LIKE
+  DISLIKE
+  FOLLOW
+  COMMENT
+  REPLY
+}
+
+enum PostType {
+  LIST
+  REVIEW
+  COMMENT
+  REPLY
 }
 
 enum Opinion {

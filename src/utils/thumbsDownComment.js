@@ -1,10 +1,17 @@
 "use server";
 
 import prisma from "@/db";
-import { Prisma, Opinion } from "@prisma/client";
+import { Prisma, Opinion, PostType, NotifType } from "@prisma/client";
 import getIsCommentLiked from "./getIsCommentLiked";
+import { sendNotification } from "./notificationUtils";
 
-export default async function thumbsDownComment(commentId, uId, revid) {
+export default async function thumbsDownComment(
+  commentId,
+  uId,
+  revid,
+  authorId,
+  sendUsername
+) {
   const revId = parseInt(revid);
   const isLiked = await getIsCommentLiked(commentId, uId);
   if (isLiked.opinion === Opinion.NONE) {
@@ -28,7 +35,7 @@ export default async function thumbsDownComment(commentId, uId, revid) {
       where: {
         reviewId_authorId_id: {
           reviewId: revId,
-          authorId: uId,
+          authorId: authorId,
           id: commentId,
         },
       },
@@ -36,6 +43,15 @@ export default async function thumbsDownComment(commentId, uId, revid) {
         totalDislikes: { increment: 1 },
       },
     });
+    if (authorId != uId) {
+      await sendNotification(
+        authorId,
+        sendUsername,
+        NotifType.DISLIKE,
+        PostType.COMMENT,
+        commentId
+      );
+    }
   } else if (isLiked.opinion === Opinion.DISLIKE) {
     return;
   } else {
@@ -59,7 +75,7 @@ export default async function thumbsDownComment(commentId, uId, revid) {
       where: {
         reviewId_authorId_id: {
           reviewId: revId,
-          authorId: uId,
+          authorId: authorId,
           id: commentId,
         },
       },

@@ -52,6 +52,7 @@ async function getPopularReviews(username, userId, skip = 0, sort = "") {
           id: true,
           image: true,
           username: true,
+          border: true,
         },
       },
       game: {
@@ -97,6 +98,14 @@ async function getPopularReviews(username, userId, skip = 0, sort = "") {
 
 async function page({ params, searchParams }) {
   const session = await getServerSession(authOptions);
+  const userWithProfile = await prisma.user.findUnique({
+    where: {
+      username: params.user,
+    },
+    select: {
+      id: true,
+    },
+  });
   let page = 1;
   if (searchParams?.page) {
     page = searchParams.page;
@@ -151,6 +160,7 @@ async function page({ params, searchParams }) {
                   review={rev}
                   user={session?.user}
                   game={rev.slug}
+                  isAuthor={session?.user?.id == userWithProfile.id}
                 />
               </div>
             </div>
@@ -183,9 +193,11 @@ async function page({ params, searchParams }) {
               PlayList
             </div>
           </Link>
-          <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
-            Lists
-          </div>
+          <Link href={`/u/${params.user}/list`}>
+            <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
+              Lists
+            </div>
+          </Link>
           <Link href={`/u/${params.user}/followers`}>
             <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
               Followers

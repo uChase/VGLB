@@ -1,3 +1,4 @@
+import ProfilePicture from "@/components/ProfilePicture";
 import prisma from "@/db";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +21,7 @@ async function getUser(username, skip = 0) {
               username: true,
               image: true,
               id: true,
+              border: true,
             },
           },
         },
@@ -66,10 +68,11 @@ async function page({ params, searchParams }) {
                       <div>
                         <Link href={`/u/${user?.follower?.username}`}>
                           <div className=" cursor-pointer inline-flex flex-col justify-center items-center">
-                            <Image
-                              src={user?.follower?.image}
+                            <ProfilePicture
+                              image={user?.follower?.image}
                               width={75}
                               height={75}
+                              border={user?.follower?.border}
                             />
                             <p className=" align-middle text-lg font-semibold">
                               {user?.follower?.username}
@@ -106,9 +109,11 @@ async function page({ params, searchParams }) {
                   PlayList
                 </div>
               </Link>
-              <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
-                Lists
-              </div>
+              <Link href={`/u/${params.user}/list`}>
+                <div className="text-white hover:bg-slate-900 py-2 px-4 rounded text-lg cursor-pointer">
+                  Lists
+                </div>
+              </Link>
               <div className="text-blue-500 hover:bg-slate-900 py-2 px-4 text-lg rounded font-bold cursor-pointer">
                 Followers
               </div>

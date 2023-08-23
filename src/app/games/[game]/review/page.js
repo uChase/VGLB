@@ -102,6 +102,10 @@ export default function ReviewCreater({ params }) {
   React.useEffect(() => {
     async function getData() {
       const game = await getGameBySlug(params.game);
+      if (new Date(game[0].release_dates[0].date * 1000) > new Date()) {
+        router.back();
+      }
+
       const review = await getReviewByUserId(session.user.id, game[0].id);
       if (review) {
         setStars(review.Stars);

@@ -9,7 +9,9 @@ export default async function getGameDbData(
   takeAmount,
   ratingSort = "All",
   order = "Popular",
-  userId
+  userId,
+  name,
+  slug
 ) {
   let follows = [];
   if (userId && order == "Friends") {
@@ -34,6 +36,8 @@ export default async function getGameDbData(
     create: {
       gameId: gameId,
       stars: -1,
+      name: name,
+      slug: slug,
     },
     include: {
       reviews: {

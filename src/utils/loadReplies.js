@@ -1,8 +1,16 @@
 "use server";
 
 import prisma from "@/db";
+import { sendNotification } from "./notificationUtils";
+import { NotifType, PostType } from "@prisma/client";
 
-export async function addReply(authorId, commentId, content) {
+export async function addReply(
+  authorId,
+  commentId,
+  content,
+  commentAuthorId,
+  sendUsername
+) {
   const newReply = await prisma.replys.create({
     data: {
       authorId: authorId,
@@ -13,6 +21,16 @@ export async function addReply(authorId, commentId, content) {
       author: true,
     },
   });
+
+  if (authorId != commentAuthorId) {
+    await sendNotification(
+      commentAuthorId,
+      sendUsername,
+      NotifType.REPLY,
+      PostType.COMMENT,
+      commentId
+    );
+  }
 
   return newReply;
 }

@@ -4,7 +4,7 @@ import { XIcon, SearchIcon } from "@heroicons/react/solid";
 import { useRouter } from "next/navigation";
 import { SearchStop } from "@/utils/SearchStop";
 
-function FavGameSearchBar({ onGameSelected }) {
+function FavGameSearchBar({ onGameSelected, making = false }) {
   const [searchValue, setSearchValue] = useState("");
   const [showList, setShowList] = useState(false);
   const [timerId, setTimerId] = useState(null);
@@ -57,9 +57,16 @@ function FavGameSearchBar({ onGameSelected }) {
   };
 
   const handleGameSelect = (game) => {
-    setSearchValue(game.name);
+    if (!making) {
+      setSearchValue(game.name);
+    } else {
+      setSearchValue("");
+    }
     setShowList(false);
-    setInputEnabled(false); // Disable input when game is selected
+
+    if (!making) {
+      setInputEnabled(false); // Disable input when game is selected
+    }
     if (onGameSelected) {
       onGameSelected(game);
     }
@@ -97,7 +104,7 @@ function FavGameSearchBar({ onGameSelected }) {
       {showList && (
         <div
           onClick={handleListClick}
-          className="absolute left-0 w-full bg-slate-800 p-2 mt-1 overflow-auto max-h-36 rounded-md shadow-lg"
+          className="absolute left-0 w-full bg-slate-800 p-2 mt-1 overflow-auto max-h-36 rounded-md shadow-lg z-10"
         >
           {searchResults.map((result) => (
             <div

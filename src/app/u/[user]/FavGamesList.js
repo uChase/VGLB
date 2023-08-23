@@ -23,7 +23,7 @@ async function FavGamesList({ favGames }) {
         <h1 className="text-slate-300 text-lg ">Favorite Games</h1>
       </div>
 
-      <div className="flex flex-row">
+      <div className="flex flex-row justify-center">
         {(() => {
           const reorderedArray = [
             sortedGames[3], // 4th game

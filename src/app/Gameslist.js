@@ -21,10 +21,13 @@ const getGames = async () => {
 
 export default async function Gameslist() {
   const data = await getGames();
+  if (!data) {
+    return "error";
+  }
 
   return (
     <div className={"flex flex-row justify-between mx-7 "}>
-      {data.map((game) => {
+      {data?.map((game) => {
         return (
           <Link href={`/games/${game.slug}`}>
             <div
