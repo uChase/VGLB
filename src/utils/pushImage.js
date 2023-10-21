@@ -19,7 +19,7 @@ dotenv.config();
 
 const cloudFlareUrl = "https://d38r4fcwx16olc.cloudfront.net";
 
-const { AWS_ACCESS_KEY, AWS_SECRET } = process.env;
+const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY } = process.env;
 
 export async function pushImage(
   image,
@@ -30,8 +30,8 @@ export async function pushImage(
 ) {
   const s3 = new S3Client({
     credentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY,
-      secretAccessKey: process.env.AWS_SECRET,
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
     region: "us-west-1",
   });
