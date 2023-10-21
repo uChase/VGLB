@@ -138,6 +138,7 @@ async function page({ params, searchParams }) {
                   review={rev}
                   user={session?.user}
                   game={params.game}
+                  key={rev.id}
                 />
               ))}
               <ReviewLoader

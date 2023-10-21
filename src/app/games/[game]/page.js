@@ -229,7 +229,11 @@ export default async function Page({ params }) {
                   </h2>
                   <div className="flex flex-row flex-wrap justify-center">
                     {friendsReviews.map((rev) => (
-                      <FriendReview review={rev} game={params.game} />
+                      <FriendReview
+                        review={rev}
+                        game={params.game}
+                        key={rev.id}
+                      />
                     ))}
                   </div>
                   <div className="  flex flex-row justify-center mt-3">
@@ -259,6 +263,7 @@ export default async function Page({ params }) {
                   review={rev}
                   user={session?.user}
                   game={params.game}
+                  key={rev.id}
                 />
               ))}
               <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-end">
@@ -276,6 +281,7 @@ export default async function Page({ params }) {
                   review={rev}
                   user={session?.user}
                   game={params.game}
+                  key={rev.id}
                 />
               ))}
               <div className=" w-100% flex justify-center items-center">

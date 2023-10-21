@@ -181,7 +181,7 @@ export default function ChooseFavoriteGames({ userId, favGames }) {
               }}
             >
               {[...Array(5)].map((_, index) => (
-                <TabPanel value={value} index={index}>
+                <TabPanel value={value} index={index} key={index}>
                   <FavGameSearchBar
                     onGameSelected={(game) => handleGameSelected(value, game)}
                   />

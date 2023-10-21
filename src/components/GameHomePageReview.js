@@ -339,7 +339,10 @@ function GameHomePageReview({
                       }
 
                       return (
-                        <div className="flex flex-col justify-center items-center w-1/2">
+                        <div
+                          className="flex flex-col justify-center items-center w-1/2"
+                          key={index}
+                        >
                           <div className="relative text-center w-3/4 p-2  text-sm font-semibold flex-grow">
                             <div
                               style={{
@@ -398,7 +401,10 @@ function GameHomePageReview({
                       }
 
                       return (
-                        <div className="flex flex-col justify-center items-center text-sm w-1/2">
+                        <div
+                          className="flex flex-col justify-center items-center text-sm w-1/2"
+                          key={index}
+                        >
                           <div className="relative text-center w-3/4 p-2   text-sm font-semibold flex-grow">
                             <div
                               style={{

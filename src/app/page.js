@@ -227,7 +227,7 @@ export default async function Home() {
                   </Link> */}
                 </div>
                 {reviews.map((rev) => (
-                  <>
+                  <div key={rev.id}>
                     <h1 className="text-slate-300 text-lg flex flex-row mb-2  justify-center">
                       Review For{" "}
                       <Link href={`/games/${rev.slug}`}>
@@ -266,7 +266,7 @@ export default async function Home() {
                         />
                       </div>
                     </div>
-                  </>
+                  </div>
                 ))}
               </div>
               <div className="ml-10 w-full ">
@@ -274,8 +274,8 @@ export default async function Home() {
                   <h2 className=" text-slate-300 text-lg">Popular Lists</h2>
                 </div>
                 <div className="flex flex-col">
-                  {lists.map((list) => {
-                    return <List list={list} />;
+                  {lists.map((list, index) => {
+                    return <List list={list} key={index} />;
                   })}
                 </div>
               </div>
@@ -334,9 +334,11 @@ export default async function Home() {
                 }
 
                 return (
-                  <Link href={`/games/${game?.slug}/review/${game?.id}`}>
+                  <Link
+                    href={`/games/${game?.slug}/review/${game?.id}`}
+                    key={game?.id}
+                  >
                     <div
-                      key={game?.id}
                       className={`relative group border-2 mx-1 border-slate-500 hover:border-slate-400 rounded-md overflow-hidden cursor-pointer `}
                     >
                       <Image
@@ -422,7 +424,7 @@ export default async function Home() {
                 </Link> */}
               </div>
               {reviews.map((rev) => (
-                <>
+                <div key={rev.id}>
                   <h1 className="text-slate-300 text-lg flex flex-row mb-2  justify-center">
                     Review For{" "}
                     <Link href={`/games/${rev.slug}`}>
@@ -461,7 +463,7 @@ export default async function Home() {
                       />
                     </div>
                   </div>
-                </>
+                </div>
               ))}
             </div>
             <div className="ml-10 w-full ">
@@ -469,8 +471,8 @@ export default async function Home() {
                 <h2 className=" text-slate-300 text-lg">Popular Lists</h2>
               </div>
               <div className="flex flex-col">
-                {lists.map((list) => {
-                  return <List list={list} />;
+                {lists.map((list, index) => {
+                  return <List list={list} key={index} />;
                 })}
               </div>
             </div>
