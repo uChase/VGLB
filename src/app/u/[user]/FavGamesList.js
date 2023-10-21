@@ -60,9 +60,8 @@ async function FavGamesList({ favGames }) {
             }
 
             return (
-              <Link href={`/games/${game?.slug}`}>
+              <Link href={`/games/${game?.slug}`} key={game?.id}>
                 <div
-                  key={game?.id}
                   className={`relative group border-2 mx-1 ${borderColorClass} rounded-md overflow-hidden cursor-pointer ${positionClass}`}
                 >
                   <Image

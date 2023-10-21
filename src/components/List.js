@@ -30,6 +30,7 @@ async function List({ list }) {
                   left: `${((index * 1) / 6) * 100}%`,
                   zIndex: `${6 - index}`,
                 }}
+                key={index}
               >
                 <Image
                   src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game?.cover?.image_id}.jpg`}

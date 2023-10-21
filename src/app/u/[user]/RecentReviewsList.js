@@ -56,9 +56,11 @@ async function RecentReviewsList({ user }) {
           }
 
           return (
-            <Link href={`/games/${game?.slug}/review/${reviews[index]?.id}`}>
+            <Link
+              href={`/games/${game?.slug}/review/${reviews[index]?.id}`}
+              key={game?.id}
+            >
               <div
-                key={game?.id}
                 className={`relative group border-2 mx-1 border-slate-500 hover:border-slate-400 rounded-md overflow-hidden cursor-pointer `}
               >
                 <Image
