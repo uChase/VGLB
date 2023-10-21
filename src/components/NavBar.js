@@ -10,6 +10,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import UserNav from "./UserNav";
 import NavBell from "./NavBell";
 import { getNotifications } from "@/utils/notificationUtils";
+import Image from "next/image";
 
 export default async function NavBar() {
   const session = await getServerSession(authOptions);
@@ -20,22 +21,28 @@ export default async function NavBar() {
   const notifications = await getNotifications(session?.user?.id);
 
   return (
-    <nav className="flex justify-between items-center p-6 text-white z-10">
-      <Link className="text-2xl  font-bold" href={"/"}>
-        VGLB
-      </Link>
-      <div className="flex space-x-4 items-center">
-        {data ? <NavBell notifs={notifications} userId={data} /> : null}
-        <UserNav username={username} pfpSrc={image} border={border} />
-        <NavAuths data={data} />
-        <Link className="hover:text-gray-300" href={"/"}>
-          What To Play
-        </Link>
-        <Link className="hover:text-gray-300" href={"/"}>
-          Live Chat
-        </Link>
-        <SearchBar />
+    <div className="py-16">
+      <div className="absolute top-0 left-0 right-0 z-50 bg-opacity-90">
+        {" "}
+        {/* Adjust z-index if needed */}
+        <nav className="container mx-auto flex justify-between items-center px-3 py-6 text-white">
+          {/* Logo and site name */}
+          <Link className="text-2xl  font-bold" href={"/"}>
+            <div className=" flex flex-row items-center">
+              <Image src={"/logo.PNG"} width={85} height={85} />
+              VGLB
+            </div>
+          </Link>
+
+          {/* Other navbar items */}
+          <div className="flex space-x-4 items-center">
+            {data ? <NavBell notifs={notifications} userId={data} /> : null}
+            <UserNav username={username} pfpSrc={image} border={border} />
+            <NavAuths data={data} />
+            <SearchBar />
+          </div>
+        </nav>
       </div>
-    </nav>
+    </div>
   );
 }

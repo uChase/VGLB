@@ -60,9 +60,6 @@ function GameHomePageReview({
   }, []);
 
   const handleReplySubmit = async () => {
-    // Handle reply submission logic here. Make sure to reset the reply text after submission.
-    // After successful submission or upon an error, you can close the reply box using setReplyOpen(false).
-    // If you wish, you could even show a success message or handle errors.
     if (replyText != "") {
       await addComment(
         user.id,
@@ -137,9 +134,9 @@ function GameHomePageReview({
 
   useEffect(() => {
     if (user) {
-      if (review.liked.opinion == "LIKE") {
+      if (review.liked?.opinion == "LIKE") {
         setThumb("up");
-      } else if (review.liked.opinion == "DISLIKE") {
+      } else if (review.liked?.opinion == "DISLIKE") {
         setThumb("down");
       }
     }
@@ -343,7 +340,7 @@ function GameHomePageReview({
 
                       return (
                         <div className="flex flex-col justify-center items-center w-1/2">
-                          <div className="relative text-center w-3/4 p-2  text-xl font-semibold flex-grow">
+                          <div className="relative text-center w-3/4 p-2  text-sm font-semibold flex-grow">
                             <div
                               style={{
                                 position: "absolute",
@@ -362,7 +359,7 @@ function GameHomePageReview({
                           </div>
                           <div
                             style={{ color: getTldrColor(label, tldr) }}
-                            className="my-2 text-xl italic font-bold"
+                            className="my-2 text-sm italic font-bold"
                           >
                             {tldr}
                           </div>
@@ -401,8 +398,8 @@ function GameHomePageReview({
                       }
 
                       return (
-                        <div className="flex flex-col justify-center items-center w-1/2">
-                          <div className="relative text-center w-3/4 p-2  text-xl font-semibold flex-grow">
+                        <div className="flex flex-col justify-center items-center text-sm w-1/2">
+                          <div className="relative text-center w-3/4 p-2   text-sm font-semibold flex-grow">
                             <div
                               style={{
                                 position: "absolute",
@@ -421,7 +418,7 @@ function GameHomePageReview({
                           </div>
                           <div
                             style={{ color: getTldrColor(label, tldr) }}
-                            className="my-2 text-xl italic font-bold"
+                            className="my-2 text-sm italic font-bold"
                           >
                             {tldr}
                           </div>

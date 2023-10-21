@@ -112,6 +112,7 @@ async function getFriendsReview(userId, gameId) {
 export default async function Page({ params }) {
   const session = await getServerSession(authOptions);
   const game = await getGame(params.game);
+  console.log(game[0].id);
 
   const isFuture =
     new Date(game[0]?.release_dates?.[0]?.date * 1000) > new Date();

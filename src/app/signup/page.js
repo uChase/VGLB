@@ -2,7 +2,11 @@
 import makeAccount from "@/utils/MakeAccount";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useEffect, useState } from "react";
+
+require("dotenv").config();
+const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA;
 
 export default function Signup() {
   const [username, setUsername] = useState("");
@@ -10,6 +14,10 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
+  const [captchaValue, setCaptchaValue] = useState(null);
+  const handleCaptchaChange = (value) => {
+    setCaptchaValue(value);
+  };
 
   const user = useSession({});
 
@@ -22,6 +30,10 @@ export default function Signup() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!captchaValue) {
+      setError("Please verify you are a human!");
+      return;
+    }
 
     try {
       await makeAccount(username, email, password);
@@ -76,6 +88,8 @@ export default function Signup() {
           required
           className="w-full py-2 px-4 border border-gray-300 rounded-md focus:outline-none focus:border-indigo-500"
         />
+        <ReCAPTCHA sitekey={siteKey} onChange={handleCaptchaChange} />
+
         <button
           type="submit"
           className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md hover:bg-indigo-700"

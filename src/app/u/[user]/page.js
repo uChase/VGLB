@@ -193,7 +193,7 @@ async function page({ params }) {
             </div>
           </Link>
           <div className="text-white hover:bg-slate-900 py-2 px-4 rounded  text-lg cursor-pointer">
-            Currently Playing
+            Currently Playing (coming soon)
           </div>
         </div>
         <div className=" w-3/4 mt-3">
