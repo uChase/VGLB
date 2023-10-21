@@ -328,6 +328,10 @@ export default async function Home() {
             <div className="flex flex-row justify-start overflow-x-auto">
               {sortedGameDatas.map((game, index) => {
                 let stars = Math.floor(game?.Stars);
+                let showStars = true;
+                if (game?.Stars <= 0) {
+                  showStars = false;
+                }
                 let halfStar = game?.Stars % 1 !== 0;
                 if (game?.Stars == 0.5) {
                   halfStar = true;
@@ -360,10 +364,14 @@ export default async function Home() {
                         height={30}
                         border={game?.author?.border}
                       />
-                      {[...Array(stars)].map((e, i) => (
-                        <Star key={i} />
-                      ))}
-                      {halfStar ? <>½</> : null}
+                      {showStars ? (
+                        <>
+                          {[...Array(stars)].map((e, i) => (
+                            <Star key={i} />
+                          ))}
+                          {halfStar ? <>½</> : null}
+                        </>
+                      ) : null}
                     </div>
                     <div className=" text-xs ml-2 mt-1 text-slate-300 ">
                       {game?.author?.username}
