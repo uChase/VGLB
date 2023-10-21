@@ -215,7 +215,7 @@ export default async function Home() {
           {/* Now reviews and list */}
           <div className=" w-3/4">
             <div className="flex flex-row justify-between">
-              <div className="flex flex-col">
+              <div className="flex flex-col w-3/5">
                 <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-end">
                   <h2 className=" text-slate-300 text-lg">
                     Popular Reviews This Week
@@ -269,7 +269,7 @@ export default async function Home() {
                   </div>
                 ))}
               </div>
-              <div className="ml-10 w-full ">
+              <div className="ml-10 w-2/5 ">
                 <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-center ml-4 ">
                   <h2 className=" text-slate-300 text-lg">Popular Lists</h2>
                 </div>
@@ -412,7 +412,7 @@ export default async function Home() {
         </div>
         <div className=" w-3/4">
           <div className="flex flex-row justify-between">
-            <div className="flex flex-col">
+            <div className="flex flex-col w-3/5">
               <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-end">
                 <h2 className=" text-slate-300 text-lg">
                   Popular Reviews This Week
@@ -466,7 +466,7 @@ export default async function Home() {
                 </div>
               ))}
             </div>
-            <div className="ml-10 w-full ">
+            <div className="ml-10 w-2/5 ">
               <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-center ml-4 ">
                 <h2 className=" text-slate-300 text-lg">Popular Lists</h2>
               </div>
