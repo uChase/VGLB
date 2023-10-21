@@ -31,7 +31,7 @@ async function page({ params }) {
             </div>
             <div className="flex flex-col">
               {profile.List.map((list) => {
-                return <List list={list} user={params.user} />;
+                return <List list={list} user={params.user} key={list.id} />;
               })}
             </div>
           </div>

@@ -59,6 +59,7 @@ function GameBar({ barHeights, spread, avg, slug, isProfile = false }) {
         {barHeights.map((height, index) => (
           <div
             className="flex flex-col items-center mx-1 h-full cursor-pointer "
+            key={index}
             onClick={() => {
               if (!isProfile) {
                 router.push(

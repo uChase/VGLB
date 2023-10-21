@@ -26,7 +26,12 @@ function ReviewLoader({ paramGame, gameID, user, rateSort, sort, ogLength }) {
   return (
     <div className=" flex flex-col justify-center">
       {reviews.map((rev) => (
-        <GameHomePageReview review={rev} user={user} game={paramGame} />
+        <GameHomePageReview
+          review={rev}
+          user={user}
+          game={paramGame}
+          key={rev.id}
+        />
       ))}
 
       {showLoad ? (

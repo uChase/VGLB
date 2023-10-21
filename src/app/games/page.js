@@ -60,6 +60,7 @@ export default async function Page({ searchParams }) {
               <Link
                 className="relative group border-2 border-slate-500 rounded-md overflow-hidden hover:border-slate-400 cursor-pointer"
                 href={`/games/${game.slug}`}
+                key={index}
               >
                 <Image
                   src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game?.cover?.image_id}.jpg`}

@@ -63,7 +63,10 @@ async function page({ params, searchParams }) {
             <div className="grid grid-cols-8 gap-5 ">
               {userWithProfile.following.map((user) => {
                 return (
-                  <div className="border-2 border-slate-50 p-2 rounded-md  mr-2 bg-slate-600 hover:bg-slate-800 bg-opacity-60">
+                  <div
+                    className="border-2 border-slate-50 p-2 rounded-md  mr-2 bg-slate-600 hover:bg-slate-800 bg-opacity-60"
+                    key={user.id}
+                  >
                     <div className="flex items-center justify-center">
                       <div>
                         <Link href={`/u/${user?.follower?.username}`}>

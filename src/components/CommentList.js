@@ -385,6 +385,7 @@ function CommentList({ comment, user, revId, reviewLikes }) {
                 user={user}
                 commentId={comment.id}
                 commentAuthor={comment.authorId}
+                key={reply.id}
               />
             );
           })}

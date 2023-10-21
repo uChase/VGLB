@@ -76,12 +76,9 @@ async function page({ params }) {
             <div className="grid grid-cols-5 gap-5">
               {games.map((game, index) => {
                 return (
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center" key={game.id}>
                     <Link href={`/games/${game.slug}`}>
-                      <div
-                        key={game.id}
-                        className="relative group border-2 border-slate-500 rounded-md overflow-hidden hover:border-slate-400 cursor-pointer"
-                      >
+                      <div className="relative group border-2 border-slate-500 rounded-md overflow-hidden hover:border-slate-400 cursor-pointer">
                         <Image
                           src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game?.cover?.image_id}.jpg`}
                           width={264}

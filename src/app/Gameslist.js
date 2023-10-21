@@ -49,12 +49,9 @@ export default async function Gameslist({ all = true }) {
     <div className={"flex flex-row justify-between  mt-4 "}>
       {data?.map((game) => {
         return (
-          <div className="mx-2 text-center">
+          <div className="mx-2 text-center" key={game.id}>
             <Link href={`/games/${game.slug}`}>
-              <div
-                key={game.id}
-                className="relative group border-2 border-slate-500 rounded-md overflow-hidden hover:border-slate-400"
-              >
+              <div className="relative group border-2 border-slate-500 rounded-md overflow-hidden hover:border-slate-400">
                 <Image
                   src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game.cover.image_id}.jpg`}
                   width={184}

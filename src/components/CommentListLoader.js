@@ -40,6 +40,7 @@ function CommentListLoader({
             comment={comment}
             revId={revId}
             reviewLikes={reviewLikes}
+            key={comment.id}
           />
         );
       })}

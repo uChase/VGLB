@@ -106,11 +106,12 @@ function FavGameSearchBar({ onGameSelected, making = false }) {
           onClick={handleListClick}
           className="absolute left-0 w-full bg-slate-800 p-2 mt-1 overflow-auto max-h-36 rounded-md shadow-lg z-10"
         >
-          {searchResults.map((result) => (
+          {searchResults.map((result, index) => (
             <div
               className={
                 "border-b border-slate-500 hover:bg-slate-700 hover:cursor-pointer"
               }
+              key={index}
               onClick={() => handleGameSelect(result)}
             >
               <p key={result.id}>{result.name}</p>

@@ -243,6 +243,7 @@ async function page({ params, searchParams }) {
               comment={comment}
               revId={params.reviewId}
               reviewLikes={review?.likesCount}
+              key={comment.id}
             />
           );
         })}

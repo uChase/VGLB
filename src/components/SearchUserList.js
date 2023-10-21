@@ -9,7 +9,9 @@ function SearchUserList({ data, searchInput }) {
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-col items-center justify-center pb-4 ">
-        <h1 className="text-4xl mt-4 mb-2">Searching "{searchInput}"</h1>
+        <h1 className="text-4xl mt-4 mb-2">
+          Searching &quot;{searchInput}&quot;
+        </h1>
         <h3 className="text-2xl  mb-2">{data?.length} Results</h3>
         <div className="flex gap-4 mb-4 text-lg">
           <p
@@ -35,6 +37,7 @@ function SearchUserList({ data, searchInput }) {
         {data.map((user, index) => {
           return (
             <div
+              key={index}
               className=" flex flex-col items-center cursor-pointer border-2 border-slate-50 p-2 rounded-md  mr-2  hover:bg-slate-600 bg-opacity-60"
               onClick={() => {
                 router.push(`/u/${user.username}`);
