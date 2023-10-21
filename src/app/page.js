@@ -220,11 +220,11 @@ export default async function Home() {
                   <h2 className=" text-slate-300 text-lg">
                     Popular Reviews This Week
                   </h2>
-                  {/* <Link href={`/`}>
+                  <Link href={`/reviews`}>
                     <h3 className="text-slate-300 cursor-pointer text-sm hover:text-slate-500">
                       See All
                     </h3>
-                  </Link> */}
+                  </Link>
                 </div>
                 {reviews.map((rev) => (
                   <div key={rev.id}>
@@ -425,11 +425,11 @@ export default async function Home() {
                 <h2 className=" text-slate-300 text-lg">
                   Popular Reviews This Week
                 </h2>
-                {/* <Link href={`/`}>
+                <Link href={`/reviews`}>
                   <h3 className="text-slate-300 cursor-pointer text-sm hover:text-slate-500">
                     See All
                   </h3>
-                </Link> */}
+                </Link>
               </div>
               {reviews.map((rev) => (
                 <div key={rev.id}>
