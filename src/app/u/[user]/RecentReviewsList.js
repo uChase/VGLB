@@ -50,6 +50,9 @@ async function RecentReviewsList({ user }) {
       <div className="flex flex-row justify-center">
         {sortedGameDatas.map((game, index) => {
           let stars = Math.floor(game?.Stars);
+          if (game?.Stars <= 0) {
+            return null;
+          }
           let halfStar = game?.Stars % 1 !== 0;
           if (game?.Stars == 0.5) {
             halfStar = true;
