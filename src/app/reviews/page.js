@@ -35,6 +35,7 @@ async function getPopularReviews(userId) {
         },
       },
     });
+    console.log(reviews);
 
     for (let i = 0; i < reviews.length; i++) {
       if (userId) {
@@ -54,7 +55,7 @@ async function getPopularReviews(userId) {
     for (let i = 0; i < reviews.length; i++) {
       reviews[i].slug = sortedGameDatas[i]?.slug;
       reviews[i].name = sortedGameDatas[i]?.name;
-      reviews[i].cover = sortedGameDatas[i]?.cover.image_id;
+      reviews[i].cover = sortedGameDatas[i]?.cover?.image_id;
     }
 
     return reviews;
