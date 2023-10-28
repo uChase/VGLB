@@ -5,6 +5,8 @@ import Link from "next/link";
 import React from "react";
 import NewListButton from "./NewListButton";
 import List from "@/components/List";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 async function page({ params }) {
   const profile = await prisma.user.findUnique({
@@ -19,6 +21,7 @@ async function page({ params }) {
   if (!profile) {
     return " no user";
   }
+  const session = await getServerSession(authOptions);
 
   return (
     <div className="  ">
@@ -27,7 +30,9 @@ async function page({ params }) {
           <div className="flex flex-col w-1/2">
             <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-1 items-center">
               <h2 className=" text-slate-300 text-lg mr-4">Lists </h2>
-              <NewListButton userId={profile?.id} />
+              {session?.user?.id === profile?.id ? (
+                <NewListButton userId={profile?.id} />
+              ) : null}
             </div>
             <div className="flex flex-col">
               {profile.List.map((list) => {
