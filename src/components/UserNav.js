@@ -16,7 +16,7 @@ function UserNav({ username, pfpSrc, border }) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="transition-all duration-200 inline-flex items-center justify-center w-full rounded-md   shadow-sm px-4 py-2  text-sm font-medium text-slate-100 hover:bg-slate-600 hover:bg-opacity-60 focus:outline-none  focus:ring-slate-400">
+        <Menu.Button className=" min-h-[40px] min-w-[40[x]] transition-all duration-200 inline-flex items-center justify-center w-full rounded-md   shadow-sm px-4 py-2  text-sm font-medium text-slate-100 hover:bg-slate-600 hover:bg-opacity-60 focus:outline-none  focus:ring-slate-400">
           <ProfilePicture
             image={pfpSrc}
             height={40}

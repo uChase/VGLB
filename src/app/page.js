@@ -91,7 +91,7 @@ async function getTopLists() {
 
 async function getTopReviews(userId) {
   // Calculate the date that was 7 days ago
-  const oneWeekAgo = subDays(new Date(), 7);
+  const oneWeekAgo = subDays(new Date(), 31);
 
   try {
     const reviews = await prisma.review.findMany({
@@ -218,7 +218,7 @@ export default async function Home() {
               <div className="flex flex-col w-3/5">
                 <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-end">
                   <h2 className=" text-slate-300 text-lg">
-                    Popular Reviews This Week
+                    Popular Reviews This Month
                   </h2>
                   <Link href={`/reviews`}>
                     <h3 className="text-slate-300 cursor-pointer text-sm hover:text-slate-500">
@@ -423,7 +423,7 @@ export default async function Home() {
             <div className="flex flex-col w-3/5">
               <div className="flex flex-row justify-between mb-4 border-b border-slate-300 py-2 items-end">
                 <h2 className=" text-slate-300 text-lg">
-                  Popular Reviews This Week
+                  Popular Reviews This Month
                 </h2>
                 <Link href={`/reviews`}>
                   <h3 className="text-slate-300 cursor-pointer text-sm hover:text-slate-500">

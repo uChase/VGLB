@@ -168,9 +168,9 @@ function GameHomePageReview({
   let count2 = 0;
 
   return (
-    <>
+    <div>
       <div
-        className={` p-2 rounded-md mb-4 bg-slate-700 bg-opacity-60 ${
+        className={` p-2 rounded-md  min-w-[400px] mb-4 bg-slate-700 bg-opacity-60 ${
           isFullscreened ? "w-3/4" : ""
         }  ${isRatioed && "border border-red-400"}`}
       >
@@ -541,7 +541,7 @@ function GameHomePageReview({
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

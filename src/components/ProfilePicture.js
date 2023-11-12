@@ -3,7 +3,7 @@ import React from "react";
 
 function ProfilePicture({ image, border = "", width, height, style }) {
   return (
-    <div>
+    <div className={` min-w-[${width}px]`}>
       <Image
         width={width}
         height={height}

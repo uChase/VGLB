@@ -83,7 +83,7 @@ async function page({ params, searchParams }) {
           <h2 className=" text-slate-300 text-lg">All Reviews </h2>
         </div>
         {reviews.map((rev) => (
-          <>
+          <div className=" min-w-[400px]">
             <h1 className="text-slate-300 text-lg flex flex-row mb-2  justify-center">
               Review For{" "}
               <Link href={`/games/${rev.slug}`}>
@@ -120,7 +120,7 @@ async function page({ params, searchParams }) {
                 />
               </div>
             </div>
-          </>
+          </div>
         ))}
       </div>
     </div>

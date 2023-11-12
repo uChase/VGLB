@@ -21,11 +21,11 @@ export default async function NavBar() {
   const notifications = await getNotifications(session?.user?.id);
 
   return (
-    <div className="py-16">
-      <div className="absolute top-0 left-0 right-0 z-50 bg-opacity-90">
+    <div className="py-16 min-w-[5]">
+      <div className="absolute top-0 left-0 right-0 z-50 bg-opacity-90   min-w-[850px]">
         {" "}
         {/* Adjust z-index if needed */}
-        <nav className="container mx-auto flex justify-between items-center px-3 py-6 text-white">
+        <nav className="container mx-auto flex min-w-[716px] justify-between items-center px-3 py-6 text-white">
           {/* Logo and site name */}
           <Link className="text-2xl  font-bold" href={"/"}>
             <div className=" flex flex-row items-center">
