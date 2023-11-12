@@ -83,7 +83,7 @@ async function page({ params, searchParams }) {
           <h2 className=" text-slate-300 text-lg">All Reviews </h2>
         </div>
         {reviews.map((rev) => (
-          <div className=" min-w-[400px]">
+          <div className=" min-w-[400px]" key={rev?.id}>
             <h1 className="text-slate-300 text-lg flex flex-row mb-2  justify-center">
               Review For{" "}
               <Link href={`/games/${rev.slug}`}>
