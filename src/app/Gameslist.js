@@ -44,6 +44,7 @@ export default async function Gameslist({ all = true }) {
   if (!data) {
     return "error";
   }
+  console.log("test");
 
   return (
     <div className={"flex flex-row justify-between  mt-4 "}>
