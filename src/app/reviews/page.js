@@ -74,6 +74,7 @@ async function page({ params, searchParams }) {
   // if (searchParams?.page) {
   //   page = searchParams.page;
   // }
+  //env change
   const reviews = await getPopularReviews(session?.user?.id);
 
   return (
